@@ -20,5 +20,5 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.7heaven.ioswidget:iosswitch:0.5'
+    compile 'com.nineoldandroids:library:2.4.0'
 }
