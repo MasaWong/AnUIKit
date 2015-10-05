@@ -1,4 +1,4 @@
-package mw.ankara.uikit;
+package mw.ankara.uikit.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -17,6 +17,8 @@ import android.view.animation.DecelerateInterpolator;
 
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.util.Property;
+
+import mw.ankara.uikit.R;
 
 /**
  * @author 7heaven
@@ -72,7 +74,7 @@ public class AnSwitch extends View {
 
             if (!isEnabled()) return false;
 
-            preIsOn = isOn;
+            preIsOn = mIsChecked;
 
             innerContentAnimator.setFloatValues(innerContentRate, 0.0F);
             innerContentAnimator.start();
@@ -93,10 +95,10 @@ public class AnSwitch extends View {
         public boolean onSingleTapUp(MotionEvent event) {
 
 
-            isOn = knobState;
+            mIsChecked = knobState;
 
-            if (preIsOn == isOn) {
-                isOn = !isOn;
+            if (preIsOn == mIsChecked) {
+                mIsChecked = !mIsChecked;
                 knobState = !knobState;
             }
 
@@ -119,8 +121,8 @@ public class AnSwitch extends View {
             knobExpandAnimator.setFloatValues(knobExpandRate, 0.0F);
             knobExpandAnimator.start();
 
-            if (AnSwitch.this.onSwitchStateChangeListener != null && isOn != preIsOn) {
-                AnSwitch.this.onSwitchStateChangeListener.onSwitchStateChange(isOn);
+            if (AnSwitch.this.onSwitchStateChangeListener != null && mIsChecked != preIsOn) {
+                AnSwitch.this.onSwitchStateChangeListener.onSwitchStateChange(mIsChecked);
             }
 
             return true;
@@ -178,7 +180,7 @@ public class AnSwitch extends View {
     private float knobMoveRate;
 
     private boolean knobState;
-    private boolean isOn;
+    private boolean mIsChecked;
     private boolean preIsOn;
 
     private RectF innerContentBound;
@@ -309,7 +311,7 @@ public class AnSwitch extends View {
         isAttachedToWindow = true;
 
         if (dirtyAnimation) {
-            knobState = this.isOn;
+            knobState = this.mIsChecked;
             if (knobState) {
 
                 knobMoveAnimator.setFloatValues(knobMoveRate, 1.0F);
@@ -329,8 +331,8 @@ public class AnSwitch extends View {
             knobExpandAnimator.setFloatValues(knobExpandRate, 0.0F);
             knobExpandAnimator.start();
 
-            if (AnSwitch.this.onSwitchStateChangeListener != null && isOn != preIsOn) {
-                AnSwitch.this.onSwitchStateChangeListener.onSwitchStateChange(isOn);
+            if (AnSwitch.this.onSwitchStateChangeListener != null && mIsChecked != preIsOn) {
+                AnSwitch.this.onSwitchStateChangeListener.onSwitchStateChange(mIsChecked);
             }
 
             dirtyAnimation = false;
@@ -385,27 +387,27 @@ public class AnSwitch extends View {
         }
     }
 
-    public boolean isOn() {
-        return this.isOn;
+    public boolean isChecked() {
+        return this.mIsChecked;
     }
 
-    public void setOn(boolean on) {
-        setOn(on, false);
+    public void setChecked(boolean checked) {
+        setOn(checked, false);
     }
 
     public void setOn(boolean on, boolean animated) {
 
-        if (this.isOn == on) return;
+        if (this.mIsChecked == on) return;
 
         if (!isAttachedToWindow && animated) {
             dirtyAnimation = true;
-            this.isOn = on;
+            this.mIsChecked = on;
 
             return;
         }
 
-        this.isOn = on;
-        knobState = this.isOn;
+        this.mIsChecked = on;
+        knobState = this.mIsChecked;
 
         if (!animated) {
 
@@ -440,8 +442,8 @@ public class AnSwitch extends View {
             knobExpandAnimator.start();
         }
 
-        if (AnSwitch.this.onSwitchStateChangeListener != null && isOn != preIsOn) {
-            AnSwitch.this.onSwitchStateChangeListener.onSwitchStateChange(isOn);
+        if (AnSwitch.this.onSwitchStateChangeListener != null && mIsChecked != preIsOn) {
+            AnSwitch.this.onSwitchStateChangeListener.onSwitchStateChange(mIsChecked);
         }
     }
 
@@ -476,10 +478,10 @@ public class AnSwitch extends View {
 
                 knobExpandAnimator.start();
 
-                isOn = knobState;
+                mIsChecked = knobState;
 
-                if (AnSwitch.this.onSwitchStateChangeListener != null && isOn != preIsOn) {
-                    AnSwitch.this.onSwitchStateChangeListener.onSwitchStateChange(isOn);
+                if (AnSwitch.this.onSwitchStateChangeListener != null && mIsChecked != preIsOn) {
+                    AnSwitch.this.onSwitchStateChangeListener.onSwitchStateChange(mIsChecked);
                 }
 
                 break;
