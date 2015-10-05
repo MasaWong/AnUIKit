@@ -1,7 +1,6 @@
 package mw.ankara.uikit.view;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -223,18 +222,14 @@ public class AnSwitch extends View {
     public AnSwitch(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.AnSwitch);
-
-        tintColor = ta.getColor(R.styleable.AnSwitch_tintColor, 0xFF9CE949);
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        tintColor = typedValue.data;
         tempTintColor = tintColor;
 
-        int defaultOuterStrokeWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1.5F, context.getResources().getDisplayMetrics());
-        int defaultShadowSpace = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, context.getResources().getDisplayMetrics());
-
-        outerStrokeWidth = ta.getDimensionPixelOffset(R.styleable.AnSwitch_outerStrokeWidth, defaultOuterStrokeWidth);
-        shadowSpace = ta.getDimensionPixelOffset(R.styleable.AnSwitch_shadowSpace, defaultShadowSpace);
-
-        ta.recycle();
+        float density = getResources().getDisplayMetrics().density;
+        outerStrokeWidth = (int) (density * 1.5f);
+        shadowSpace = (int) (density * 5);
 
         knobBound = new RectF();
         innerContentBound = new RectF();
