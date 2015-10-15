@@ -3,9 +3,7 @@ package mw.ankara.uikit.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -70,7 +68,6 @@ public class AnSwitch extends View {
     private GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener() {
         @Override
         public boolean onDown(MotionEvent event) {
-
             if (!isEnabled()) return false;
 
             preIsOn = mIsChecked;
@@ -86,14 +83,10 @@ public class AnSwitch extends View {
 
         @Override
         public void onShowPress(MotionEvent event) {
-
-
         }
 
         @Override
         public boolean onSingleTapUp(MotionEvent event) {
-
-
             mIsChecked = knobState;
 
             if (preIsOn == mIsChecked) {
@@ -129,7 +122,6 @@ public class AnSwitch extends View {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-
             if (e2.getX() > centerX) {
                 if (!knobState) {
                     knobState = !knobState;
@@ -146,18 +138,12 @@ public class AnSwitch extends View {
 
                     knobMoveAnimator.setFloatValues(knobMoveRate, 0.0F);
                     knobMoveAnimator.start();
-
-
                 }
             }
 
             return true;
         }
     };
-
-
-    private static final int intrinsicWidth = 0;
-    private static final int intrinsicHeight = 0;
 
     private int width;
     private int height;
@@ -169,8 +155,6 @@ public class AnSwitch extends View {
 
     private int shadowSpace;
     private int outerStrokeWidth;
-
-    private Drawable shadowDrawable;
 
     private RectF knobBound;
     private float knobMaxExpandWidth;
@@ -197,16 +181,13 @@ public class AnSwitch extends View {
 
     private Paint paint;
 
-    private RectF ovalForPath;
-    private Path roundRectPath;
-
     private RectF tempForRoundRect;
 
     private boolean dirtyAnimation = false;
     private boolean isAttachedToWindow = false;
 
     public interface OnSwitchStateChangeListener {
-        public void onSwitchStateChange(boolean isOn);
+        void onSwitchStateChange(boolean isOn);
     }
 
     private OnSwitchStateChangeListener onSwitchStateChangeListener;
@@ -233,12 +214,10 @@ public class AnSwitch extends View {
 
         knobBound = new RectF();
         innerContentBound = new RectF();
-        ovalForPath = new RectF();
 
         tempForRoundRect = new RectF();
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        roundRectPath = new Path();
 
         gestureDetector = new GestureDetector(context, gestureListener);
         gestureDetector.setIsLongpressEnabled(false);
@@ -258,8 +237,6 @@ public class AnSwitch extends View {
         knobMoveAnimator = ObjectAnimator.ofFloat(AnSwitch.this, knobMoveProperty, knobMoveRate, 1.0F);
         knobMoveAnimator.setDuration(commonDuration);
         knobMoveAnimator.setInterpolator(new DecelerateInterpolator());
-
-        shadowDrawable = context.getResources().getDrawable(R.drawable.shadow);
     }
 
     public void setOnSwitchStateChangeListener(OnSwitchStateChangeListener onSwitchStateChangeListener) {
@@ -308,14 +285,12 @@ public class AnSwitch extends View {
         if (dirtyAnimation) {
             knobState = this.mIsChecked;
             if (knobState) {
-
                 knobMoveAnimator.setFloatValues(knobMoveRate, 1.0F);
                 knobMoveAnimator.start();
 
                 innerContentAnimator.setFloatValues(innerContentRate, 0.0F);
                 innerContentAnimator.start();
             } else {
-
                 knobMoveAnimator.setFloatValues(knobMoveRate, 0.0F);
                 knobMoveAnimator.start();
 
@@ -415,7 +390,6 @@ public class AnSwitch extends View {
             }
 
             setKnobExpandRate(0.0F);
-
         } else {
             if (knobState) {
 
@@ -437,8 +411,8 @@ public class AnSwitch extends View {
             knobExpandAnimator.start();
         }
 
-        if (AnSwitch.this.onSwitchStateChangeListener != null && mIsChecked != preIsOn) {
-            AnSwitch.this.onSwitchStateChangeListener.onSwitchStateChange(mIsChecked);
+        if (onSwitchStateChangeListener != null && mIsChecked != preIsOn) {
+            onSwitchStateChangeListener.onSwitchStateChange(mIsChecked);
         }
     }
 
@@ -453,7 +427,6 @@ public class AnSwitch extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
         if (!isEnabled()) return false;
 
         switch (event.getAction()) {
@@ -501,8 +474,8 @@ public class AnSwitch extends View {
         super.onDraw(canvas);
 
         //innerContentCalculation begin
-        float w = (float) intrinsicInnerWidth / 2.0F * innerContentRate;
-        float h = (float) intrinsicInnerHeight / 2.0F * innerContentRate;
+        float w = intrinsicInnerWidth / 2.0F * innerContentRate;
+        float h = intrinsicInnerHeight / 2.0F * innerContentRate;
 
         this.innerContentBound.left = centerX - w;
         this.innerContentBound.top = centerY - h;
@@ -511,7 +484,7 @@ public class AnSwitch extends View {
         //innerContentCalculation end
 
         //knobExpandCalculation begin
-        w = intrinsicKnobWidth + (float) (knobMaxExpandWidth - intrinsicKnobWidth) * knobExpandRate;
+        w = intrinsicKnobWidth + (knobMaxExpandWidth - intrinsicKnobWidth) * knobExpandRate;
 
         boolean left = knobBound.left + knobBound.width() / 2 > centerX;
 
@@ -524,7 +497,7 @@ public class AnSwitch extends View {
 
         //knobMoveCalculation begin
         float kw = knobBound.width();
-        w = (float) (width - kw - ((shadowSpace + outerStrokeWidth) * 2)) * knobMoveRate;
+        w = (width - kw - ((shadowSpace + outerStrokeWidth) * 2)) * knobMoveRate;
 
         this.colorStep = RGBColorTransform(knobMoveRate, backgroundColor, tintColor);
 
@@ -544,14 +517,8 @@ public class AnSwitch extends View {
         canvas.drawRoundRect(innerContentBound, innerContentBound.height() / 2, innerContentBound.height() / 2, paint);
 
         //knob
-//        shadowDrawable.setBounds((int) (knobBound.left - shadowSpace), (int) (knobBound.top - shadowSpace), (int) (knobBound.right + shadowSpace), (int) (knobBound.bottom + shadowSpace));
-//        shadowDrawable.draw(canvas);
         paint.setShadowLayer(2, 0, shadowSpace / 2, isEnabled() ? 0x20000000 : 0x10000000);
 
-//        paint.setColor(isEnabled() ? 0x20000000 : 0x10000000);
-//        drawRoundRect(knobBound.left, knobBound.top + shadowSpace / 2, knobBound.right, knobBound.bottom + shadowSpace / 2, cornerRadius - outerStrokeWidth, canvas, paint);
-//
-//        paint.setColor(foregroundColor);
         canvas.drawRoundRect(knobBound, cornerRadius - outerStrokeWidth, cornerRadius - outerStrokeWidth, paint);
         paint.setShadowLayer(0, 0, 0, 0);
 
@@ -589,6 +556,5 @@ public class AnSwitch extends View {
         int bGap = (int) ((float) (nb - ob) * progress);
 
         return 0xFF000000 | ((or + rGap) << 16) | ((og + gGap) << 8) | (ob + bGap);
-
     }
 }
