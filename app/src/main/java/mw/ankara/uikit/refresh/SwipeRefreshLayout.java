@@ -33,6 +33,7 @@ public class SwipeRefreshLayout extends ViewGroup {
     private int mActivePointerId = INVALID_POINTER;
 
     private float mInitialY;
+    private float mCurrentY;
 
     private OnRefreshCallback mHeaderRefreshCallback;
 
@@ -56,8 +57,8 @@ public class SwipeRefreshLayout extends ViewGroup {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        if (getChildCount() > 2) {
-            throw new IllegalStateException("SwipeRefreshLayout can host only one direct child");
+        if (getChildCount() != 2) {
+            throw new IllegalStateException("SwipeRefreshLayout can only host two child");
         }
 
         int maxWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
@@ -107,7 +108,7 @@ public class SwipeRefreshLayout extends ViewGroup {
                 if (initialDownY == -1) {
                     return false;
                 }
-                mInitialY = initialDownY;
+                mInitialY = mCurrentY = initialDownY;
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -165,11 +166,12 @@ public class SwipeRefreshLayout extends ViewGroup {
                 final float distanceY = (y - mInitialY) * SCROLL_RATE;
                 if (mIsBeingDragging) {
                     if (mHeaderRefreshCallback != null) {
-                        mHeaderRefreshCallback.onCoordinateYChanged(distanceY);
+                        mHeaderRefreshCallback.onSwipeDiff(y - mCurrentY);
                     }
                     onLayout(false, getLeft(), (int) (getTop() + distanceY),
                         getRight(), (int) (getBottom() + distanceY));
                 }
+                mCurrentY = y;
                 break;
             }
 
@@ -280,7 +282,7 @@ public class SwipeRefreshLayout extends ViewGroup {
     }
 
     public interface OnRefreshCallback {
-        void onCoordinateYChanged(float y);
+        void onSwipeDiff(float diffY);
 
         void onRefresh();
 
