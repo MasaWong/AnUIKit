@@ -9,7 +9,7 @@ import android.util.AttributeSet;
  * @author masawong
  * @since 4/14/16
  */
-public class SquareImageView extends NetworkImageView {
+public class SquareImageView extends WebImageView {
 
     public SquareImageView(Context context) {
         super(context);
